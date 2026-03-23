@@ -1,0 +1,256 @@
+{
+  "lineNo": "B53",
+  "startChinese": "大坝公交车场",
+  "startEnglish": "Daba Bus Station",
+  "endChinese": "地铁燕山立交桥站",
+  "endEnglish": "Yanshan Flyover Metro Station",
+  "mainStation": {
+    "name": "大坝公交车场",
+    "metroLines": [],
+    "isBRT": false,
+    "direction": "both"
+  },
+  "subStation": {
+    "name": "地铁燕山立交桥站",
+    "metroLines": [
+      4
+    ],
+    "isBRT": false,
+    "direction": "both"
+  },
+  "stations": [
+    {
+      "name": "公交维修公司",
+      "direction": "down",
+      "metroLines": [],
+      "isBRT": false
+    },
+    {
+      "name": "大坝",
+      "direction": "both",
+      "metroLines": [],
+      "isBRT": false
+    },
+    {
+      "name": "泺口服装城",
+      "direction": "both",
+      "metroLines": [],
+      "isBRT": false
+    },
+    {
+      "name": "动物园",
+      "direction": "both",
+      "metroLines": [],
+      "isBRT": false
+    },
+    {
+      "name": "工人新村北村",
+      "direction": "up",
+      "metroLines": [],
+      "isBRT": false
+    },
+    {
+      "name": "工人新村南村",
+      "direction": "both",
+      "metroLines": [],
+      "isBRT": false
+    },
+    {
+      "name": "长途汽车站",
+      "direction": "both",
+      "metroLines": [],
+      "isBRT": false
+    },
+    {
+      "name": "地铁济泺路站",
+      "direction": "down",
+      "metroLines": [
+        2
+      ],
+      "isBRT": false
+    },
+    {
+      "name": "北园大街东工商河路",
+      "direction": "both",
+      "metroLines": [],
+      "isBRT": false
+    },
+    {
+      "name": "三孔桥街北口",
+      "direction": "both",
+      "metroLines": [],
+      "isBRT": false
+    },
+    {
+      "name": "仁丰前街",
+      "direction": "both",
+      "metroLines": [],
+      "isBRT": false
+    },
+    {
+      "name": "明湖西路顺河街",
+      "direction": "both",
+      "metroLines": [],
+      "isBRT": false
+    },
+    {
+      "name": "河套庄",
+      "direction": "both",
+      "metroLines": [],
+      "isBRT": false
+    },
+    {
+      "name": "北关",
+      "direction": "both",
+      "metroLines": [],
+      "isBRT": false
+    },
+    {
+      "name": "大明湖北门",
+      "direction": "both",
+      "metroLines": [],
+      "isBRT": false
+    },
+    {
+      "name": "大明湖火车站",
+      "direction": "both",
+      "metroLines": [],
+      "isBRT": false
+    },
+    {
+      "name": "明湖东路菜市庄街",
+      "direction": "both",
+      "metroLines": [],
+      "isBRT": false
+    },
+    {
+      "name": "长盛小区",
+      "direction": "both",
+      "metroLines": [],
+      "isBRT": false
+    },
+    {
+      "name": "花园庄",
+      "direction": "down",
+      "metroLines": [],
+      "isBRT": false
+    },
+    {
+      "name": "花园路历山路",
+      "direction": "up",
+      "metroLines": [],
+      "isBRT": false
+    },
+    {
+      "name": "省临床中心历山院区",
+      "direction": "both",
+      "metroLines": [],
+      "isBRT": false
+    },
+    {
+      "name": "东仓",
+      "direction": "both",
+      "metroLines": [],
+      "isBRT": false
+    },
+    {
+      "name": "解放桥北",
+      "direction": "both",
+      "metroLines": [],
+      "isBRT": false
+    },
+    {
+      "name": "解放桥东",
+      "direction": "both",
+      "metroLines": [],
+      "isBRT": false
+    },
+    {
+      "name": "中心医院",
+      "direction": "both",
+      "metroLines": [],
+      "isBRT": false
+    },
+    {
+      "name": "解放路山大路",
+      "direction": "both",
+      "metroLines": [],
+      "isBRT": false
+    },
+    {
+      "name": "百花剧院",
+      "direction": "both",
+      "metroLines": [],
+      "isBRT": false
+    },
+    {
+      "name": "公交集团",
+      "direction": "both",
+      "metroLines": [],
+      "isBRT": false
+    },
+    {
+      "name": "甸柳庄",
+      "direction": "both",
+      "metroLines": [],
+      "isBRT": false
+    },
+    {
+      "name": "解放东路二环东路",
+      "direction": "both",
+      "metroLines": [],
+      "isBRT": true
+    },
+    {
+      "name": "砚泉",
+      "direction": "both",
+      "metroLines": [],
+      "isBRT": true
+    },
+    {
+      "name": "浆水泉路解放东路",
+      "direction": "both",
+      "metroLines": [],
+      "isBRT": false
+    },
+    {
+      "name": "姚家小区",
+      "direction": "both",
+      "metroLines": [],
+      "isBRT": false
+    },
+    {
+      "name": "武警医院",
+      "direction": "both",
+      "metroLines": [],
+      "isBRT": false
+    },
+    {
+      "name": "地铁浆水泉路站",
+      "direction": "down",
+      "metroLines": [],
+      "isBRT": false
+    },
+    {
+      "name": "燕山立交桥北",
+      "direction": "up",
+      "metroLines": [],
+      "isBRT": false
+    },
+    {
+      "name": "窑头路二环东路",
+      "direction": "up",
+      "metroLines": [],
+      "isBRT": false
+    },
+    {
+      "name": "友谊苑小区",
+      "direction": "up",
+      "metroLines": [],
+      "isBRT": false
+    }
+  ],
+  "scale": 0.34507568332952926,
+  "translateX": 434,
+  "translateY": 128
+}
