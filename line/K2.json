@@ -1,0 +1,166 @@
+{
+  "lineNo": "K2",
+  "startChinese": "匡山小区",
+  "startEnglish": "Kuangshanxiaoqu",
+  "endChinese": "中心医院",
+  "endEnglish": "Jinan Central Hospital",
+  "mainStation": {
+    "name": "匡山小区",
+    "metroLines": [],
+    "isBRT": false,
+    "direction": "both"
+  },
+  "subStation": {
+    "name": "中心医院",
+    "metroLines": [],
+    "isBRT": false,
+    "direction": "both"
+  },
+  "stations": [
+    {
+      "name": "济齐路交校路",
+      "direction": "both",
+      "metroLines": [],
+      "isBRT": false
+    },
+    {
+      "name": "济齐路张庄路",
+      "direction": "both",
+      "metroLines": [],
+      "isBRT": false
+    },
+    {
+      "name": "八里桥",
+      "direction": "both",
+      "metroLines": [],
+      "isBRT": false
+    },
+    {
+      "name": "纬十二路经二路",
+      "direction": "both",
+      "metroLines": [],
+      "isBRT": false
+    },
+    {
+      "name": "纬十二路经五路",
+      "direction": "both",
+      "metroLines": [],
+      "isBRT": false
+    },
+    {
+      "name": "纬十二路经七路",
+      "direction": "both",
+      "metroLines": [],
+      "isBRT": false
+    },
+    {
+      "name": "五里牌坊",
+      "direction": "both",
+      "metroLines": [
+        4
+      ],
+      "isBRT": false
+    },
+    {
+      "name": "市妇幼保健院总院区",
+      "direction": "both",
+      "metroLines": [],
+      "isBRT": false
+    },
+    {
+      "name": "八一立交桥西",
+      "direction": "both",
+      "metroLines": [],
+      "isBRT": false
+    },
+    {
+      "name": "经十纬一",
+      "direction": "both",
+      "metroLines": [
+        4
+      ],
+      "isBRT": false
+    },
+    {
+      "name": "省体育中心",
+      "direction": "both",
+      "metroLines": [
+        4
+      ],
+      "isBRT": false
+    },
+    {
+      "name": "全民健身中心",
+      "direction": "both",
+      "metroLines": [],
+      "isBRT": false
+    },
+    {
+      "name": "地铁泉城公园站",
+      "direction": "both",
+      "metroLines": [
+        4
+      ],
+      "isBRT": false
+    },
+    {
+      "name": "经十路舜耕路",
+      "direction": "both",
+      "metroLines": [],
+      "isBRT": false
+    },
+    {
+      "name": "千佛山",
+      "direction": "both",
+      "metroLines": [
+        4
+      ],
+      "isBRT": false
+    },
+    {
+      "name": "历山名郡",
+      "direction": "both",
+      "metroLines": [],
+      "isBRT": false
+    },
+    {
+      "name": "历山路文化东路",
+      "direction": "both",
+      "metroLines": [],
+      "isBRT": false
+    },
+    {
+      "name": "历山路和平路",
+      "direction": "both",
+      "metroLines": [],
+      "isBRT": false
+    },
+    {
+      "name": "解放桥南",
+      "direction": "down",
+      "metroLines": [],
+      "isBRT": false
+    },
+    {
+      "name": "历东花园",
+      "direction": "up",
+      "metroLines": [],
+      "isBRT": false
+    },
+    {
+      "name": "和平路历山东路",
+      "direction": "up",
+      "metroLines": [],
+      "isBRT": false
+    },
+    {
+      "name": "和平路山师东路",
+      "direction": "up",
+      "metroLines": [],
+      "isBRT": false
+    }
+  ],
+  "scale": 0.34507568332952926,
+  "translateX": 487,
+  "translateY": 168
+}

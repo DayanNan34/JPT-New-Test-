@@ -1,0 +1,210 @@
+{
+  "lineNo": "1",
+  "startChinese": "重汽彩世界",
+  "startEnglish": "Zhongqicaishijie",
+  "endChinese": "洪家楼",
+  "endEnglish": "Hongjialou",
+  "mainStation": {
+    "name": "重汽彩世界",
+    "metroLines": [],
+    "isBRT": false,
+    "direction": "both"
+  },
+  "subStation": {
+    "name": "洪家楼",
+    "metroLines": [],
+    "isBRT": false,
+    "direction": "both"
+  },
+  "stations": [
+    {
+      "name": "济齐路黄岗路",
+      "direction": "both",
+      "metroLines": [],
+      "isBRT": false
+    },
+    {
+      "name": "济齐路交校路",
+      "direction": "both",
+      "metroLines": [],
+      "isBRT": false
+    },
+    {
+      "name": "济齐路张庄路",
+      "direction": "both",
+      "metroLines": [],
+      "isBRT": false
+    },
+    {
+      "name": "八里桥",
+      "direction": "both",
+      "metroLines": [],
+      "isBRT": false
+    },
+    {
+      "name": "经一纬十二",
+      "direction": "down",
+      "metroLines": [],
+      "isBRT": false
+    },
+    {
+      "name": "槐村街经四路",
+      "direction": "up",
+      "metroLines": [],
+      "isBRT": false
+    },
+    {
+      "name": "经四路西口",
+      "direction": "both",
+      "metroLines": [],
+      "isBRT": false
+    },
+    {
+      "name": "经四纬十二",
+      "direction": "both",
+      "metroLines": [],
+      "isBRT": false
+    },
+    {
+      "name": "纬十二路经二路",
+      "direction": "both",
+      "metroLines": [],
+      "isBRT": false
+    },
+    {
+      "name": "经二纬十二",
+      "direction": "both",
+      "metroLines": [],
+      "isBRT": false
+    },
+    {
+      "name": "华联商厦",
+      "direction": "both",
+      "metroLines": [],
+      "isBRT": false
+    },
+    {
+      "name": "经二纬八",
+      "direction": "both",
+      "metroLines": [],
+      "isBRT": false
+    },
+    {
+      "name": "经二纬六",
+      "direction": "both",
+      "metroLines": [],
+      "isBRT": false
+    },
+    {
+      "name": "经二纬五",
+      "direction": "both",
+      "metroLines": [],
+      "isBRT": false
+    },
+    {
+      "name": "经二纬二",
+      "direction": "both",
+      "metroLines": [],
+      "isBRT": false
+    },
+    {
+      "name": "经二纬一",
+      "direction": "both",
+      "metroLines": [],
+      "isBRT": false
+    },
+    {
+      "name": "市法院",
+      "direction": "both",
+      "metroLines": [],
+      "isBRT": false
+    },
+    {
+      "name": "普利街",
+      "direction": "both",
+      "metroLines": [],
+      "isBRT": false
+    },
+    {
+      "name": "趵突泉北门",
+      "direction": "both",
+      "metroLines": [],
+      "isBRT": false
+    },
+    {
+      "name": "趵突泉东门",
+      "direction": "both",
+      "metroLines": [],
+      "isBRT": false
+    },
+    {
+      "name": "泉城广场北",
+      "direction": "both",
+      "metroLines": [],
+      "isBRT": false
+    },
+    {
+      "name": "黑虎泉",
+      "direction": "both",
+      "metroLines": [],
+      "isBRT": false
+    },
+    {
+      "name": "青龙桥南",
+      "direction": "both",
+      "metroLines": [],
+      "isBRT": false
+    },
+    {
+      "name": "解放路兴华街",
+      "direction": "both",
+      "metroLines": [],
+      "isBRT": false
+    },
+    {
+      "name": "解放桥东",
+      "direction": "both",
+      "metroLines": [],
+      "isBRT": false
+    },
+    {
+      "name": "中心医院",
+      "direction": "both",
+      "metroLines": [],
+      "isBRT": false
+    },
+    {
+      "name": "解放路山大路",
+      "direction": "both",
+      "metroLines": [],
+      "isBRT": false
+    },
+    {
+      "name": "山大路山大南路",
+      "direction": "both",
+      "metroLines": [],
+      "isBRT": false
+    },
+    {
+      "name": "山大路花园庄东路",
+      "direction": "both",
+      "metroLines": [],
+      "isBRT": false
+    },
+    {
+      "name": "花园路山大路",
+      "direction": "both",
+      "metroLines": [],
+      "isBRT": false
+    },
+    {
+      "name": "花园路洪家楼西路",
+      "direction": "both",
+      "metroLines": [],
+      "isBRT": false
+    }
+  ],
+  "scale": 0.34507568332952926,
+  "translateX": 534,
+  "translateY": 174
+}
