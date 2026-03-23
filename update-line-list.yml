@@ -1,0 +1,33 @@
+name: Update Line List
+
+on:
+  push:
+    paths:
+      - 'line/*.json'      # 当 line 目录下任何 json 文件变化时触发
+      - '.github/workflows/update-line-list.yml'  # 工作流文件本身变化也触发
+
+jobs:
+  update-list:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write       # 需要写入权限来提交更新
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0    # 确保获取完整历史，便于提交
+
+      - name: Generate list.json
+        run: |
+          cd line
+          # 列出所有 .json 文件，排除 list.json 自身，输出为 JSON 数组
+          files=$(ls *.json 2>/dev/null | grep -v '^list.json$' | jq -R -s -c 'split("\n") | map(select(length>0))')
+          echo $files > list.json
+
+      - name: Commit and push if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add line/list.json
+          git diff --quiet && git diff --staged --quiet || git commit -m "Update line/list.json automatically"
+          git push
