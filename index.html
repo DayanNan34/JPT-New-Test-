@@ -197,17 +197,42 @@
             background: #f1f5f9;
             color: #475569;
         }
-        .btn-disabled {
-            background: #aaa;
-            color: #eee;
-            cursor: not-allowed;
-            border: 1px solid #888;
-            pointer-events: auto;
-        }
         hr {
             border: 1px solid #e9eef2;
             width: 100%;
             margin: 8px 0;
+        }
+        .manual-control-group {
+            background: #f1f5f9;
+            padding: 12px;
+            border-radius: 12px;
+            margin-top: 10px;
+        }
+        .manual-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+        .manual-row label {
+            width: 130px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .manual-row input {
+            flex: 1;
+            min-width: 80px;
+            padding: 6px 8px;
+            border-radius: 20px;
+            border: 1px solid #ccc;
+            font-size: 12px;
+        }
+        .section-title {
+            font-weight: bold;
+            font-size: 13px;
+            margin: 8px 0 6px 0;
+            color: #2a7de1;
         }
 
         .stations-list {
@@ -547,7 +572,46 @@
                     <input type="text" id="endStation" value="Yanshan Flyover Metro Station">
                 </div>
                 <hr>
-                <button class="btn btn-clear" onclick="clearAll()">清空重置</button>
+                <div class="input-group">
+                    <label>字体调整模式</label>
+                    <div style="display: flex; gap: 10px;">
+                        <label><input type="radio" name="adjustMode" value="auto" checked> 自动调整</label>
+                        <label><input type="radio" name="adjustMode" value="manual"> 手动调整</label>
+                    </div>
+                </div>
+                <div id="manualControls" class="manual-control-group" style="display: none;">
+                    <div class="section-title">中文部分</div>
+                    <div class="manual-row">
+                        <label>主站中文字体大小(px):</label>
+                        <input type="number" id="manualStartChFontSize" step="1" min="20" max="80" value="53">
+                    </div>
+                    <div class="manual-row">
+                        <label>副站中文字体大小(px):</label>
+                        <input type="number" id="manualEndChFontSize" step="1" min="20" max="80" value="53">
+                    </div>
+                    <div class="manual-row">
+                        <label>中文字间距(px):</label>
+                        <input type="number" id="manualChLetterSpacing" step="0.5" value="0">
+                    </div>
+                    <div class="section-title">英文部分</div>
+                    <div class="manual-row">
+                        <label>主站字母间距(px):</label>
+                        <input type="number" id="manualStartLS" step="0.5" value="0">
+                    </div>
+                    <div class="manual-row">
+                        <label>副站字母间距(px):</label>
+                        <input type="number" id="manualEndLS" step="0.5" value="0">
+                    </div>
+                    <div class="manual-row">
+                        <label>英文字体大小(px):</label>
+                        <input type="number" id="manualEnFontSize" step="1" min="10" max="40" value="22">
+                    </div>
+                    <div class="manual-row">
+                        <label>英文破折号偏移(px):</label>
+                        <input type="number" id="manualEnDashOffset" step="1" value="0">
+                    </div>
+                </div>
+                <button class="btn btn-clear" onclick="clearAll()" style="margin-top: 8px;">清空重置</button>
             </div>
             <div id="stationPage" class="tab-page hidden">
                 <h3 style="margin:0 0 10px;">站点列表 (拖拽中间站可排序)</h3>
@@ -564,7 +628,7 @@
                     <button class="btn btn-clear" onclick="deleteAllStations()">删除全部中间站</button>
                 </div>
                 <div style="margin-top:16px; display:flex; gap:8px; flex-wrap:wrap;">
-                    <button class="btn btn-disabled" id="exportBtn">导出PNG</button>
+                    <button class="btn btn-add" id="exportBtn">导出PNG</button>
                     <button class="btn btn-add" onclick="exportSave()">导出存档</button>
                     <button class="btn btn-add" onclick="document.getElementById('importFile').click()">导入存档</button>
                     <input type="file" id="importFile" accept=".json" style="display:none;" onchange="importSave(event)">
@@ -625,6 +689,17 @@
         const MIN_SCALE = 0.1;
         const MAX_SCALE = 10;
 
+        // 调整模式相关
+        let adjustMode = 'auto';
+        // 手动参数
+        let manualStartChFontSize = 53;
+        let manualEndChFontSize = 53;
+        let manualChLetterSpacing = 0;
+        let manualStartLS = 0;
+        let manualEndLS = 0;
+        let manualEnFontSize = 22;
+        let manualEnDashOffset = 0;
+
         const canvasArea = document.getElementById('canvasArea');
         const mapContainer = document.getElementById('map-container');
         const panelWrapper = document.getElementById('panelWrapper');
@@ -641,13 +716,24 @@
         const tabStationBtn = document.getElementById('tabStationBtn');
         const exportBtn = document.getElementById('exportBtn');
 
-        // 线路库相关 DOM 元素
+        // 线路库相关
         const tabLibBtn = document.getElementById('tabLibBtn');
         const libPage = document.getElementById('libPage');
         const lineSelect = document.getElementById('lineSelect');
 
-        // 线路列表（可通过 API 获取，此处硬编码示例，可手动修改或通过 fetch 获取）
-        let lineList = []; // 存储 { name: '线路号', filename: 'xxx.json' }
+        // 手动控件
+        const manualControlsDiv = document.getElementById('manualControls');
+        const manualStartChFontSizeInput = document.getElementById('manualStartChFontSize');
+        const manualEndChFontSizeInput = document.getElementById('manualEndChFontSize');
+        const manualChLetterSpacingInput = document.getElementById('manualChLetterSpacing');
+        const manualStartLSInput = document.getElementById('manualStartLS');
+        const manualEndLSInput = document.getElementById('manualEndLS');
+        const manualEnFontSizeInput = document.getElementById('manualEnFontSize');
+        const manualEnDashOffsetInput = document.getElementById('manualEnDashOffset');
+        const radioAuto = document.querySelector('input[value="auto"]');
+        const radioManual = document.querySelector('input[value="manual"]');
+
+        let lineList = [];
 
         // 控制盘折叠/展开
         function togglePanel() {
@@ -661,7 +747,6 @@
         }
         window.togglePanel = togglePanel;
 
-        // 应用画布变换
         function applyTransform() {
             mapContainer.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
         }
@@ -754,11 +839,6 @@
         }
         initCanvasDrag();
 
-        exportBtn.addEventListener('click', e => {
-            e.preventDefault();
-            alert('该功能暂不开启');
-        });
-
         // 选项卡切换
         tabLineBtn.addEventListener('click', () => {
             tabLineBtn.classList.add('active');
@@ -784,17 +864,53 @@
             libPage.classList.remove('hidden');
             linePage.classList.add('hidden');
             stationPage.classList.add('hidden');
-            // 每次切换到线路库时，尝试刷新线路列表（如果尚未加载）
-            if (lineList.length === 0) {
-                loadLineList();
+            if (lineList.length === 0) loadLineList();
+        });
+
+        // 模式切换
+        function updateManualControlsVisibility() {
+            if (adjustMode === 'manual') {
+                manualControlsDiv.style.display = 'block';
+            } else {
+                manualControlsDiv.style.display = 'none';
+            }
+            updateDisplay();
+        }
+
+        radioAuto.addEventListener('change', () => {
+            if (radioAuto.checked) {
+                adjustMode = 'auto';
+                updateManualControlsVisibility();
+            }
+        });
+        radioManual.addEventListener('change', () => {
+            if (radioManual.checked) {
+                adjustMode = 'manual';
+                updateManualControlsVisibility();
             }
         });
 
-        // 获取线路列表（优先尝试通过 API 获取，若失败则使用预设列表）
+        function updateManualParamsFromInputs() {
+            manualStartChFontSize = parseFloat(manualStartChFontSizeInput.value) || 53;
+            manualEndChFontSize = parseFloat(manualEndChFontSizeInput.value) || 53;
+            manualChLetterSpacing = parseFloat(manualChLetterSpacingInput.value) || 0;
+            manualStartLS = parseFloat(manualStartLSInput.value) || 0;
+            manualEndLS = parseFloat(manualEndLSInput.value) || 0;
+            manualEnFontSize = parseFloat(manualEnFontSizeInput.value) || 22;
+            manualEnDashOffset = parseFloat(manualEnDashOffsetInput.value) || 0;
+            updateDisplay();
+        }
+
+        manualStartChFontSizeInput.addEventListener('input', updateManualParamsFromInputs);
+        manualEndChFontSizeInput.addEventListener('input', updateManualParamsFromInputs);
+        manualChLetterSpacingInput.addEventListener('input', updateManualParamsFromInputs);
+        manualStartLSInput.addEventListener('input', updateManualParamsFromInputs);
+        manualEndLSInput.addEventListener('input', updateManualParamsFromInputs);
+        manualEnFontSizeInput.addEventListener('input', updateManualParamsFromInputs);
+        manualEnDashOffsetInput.addEventListener('input', updateManualParamsFromInputs);
+
+        // 线路库逻辑
         function loadLineList() {
-            // 方式1：尝试请求后端接口获取文件列表（需要服务端支持）
-            // 此处使用 fetch 请求一个返回 JSON 数组的接口，例如 /api/lines 或 /line/list.json
-            // 若没有后端，则使用预设列表
             fetch('line/list.json')
                 .then(res => {
                     if (!res.ok) throw new Error('No API');
@@ -809,7 +925,6 @@
                     populateSelect();
                 })
                 .catch(() => {
-                    // 降级方案：使用硬编码示例列表，用户可手动修改此数组来添加线路
                     console.warn('无法获取线路列表，使用预设列表');
                     lineList = [
                         { name: '1', filename: '1.json' },
@@ -822,7 +937,6 @@
                 });
         }
 
-        // 填充下拉框
         function populateSelect() {
             lineSelect.innerHTML = '<option value="">-- 请选择线路 --</option>';
             lineList.forEach(line => {
@@ -833,7 +947,6 @@
             });
         }
 
-        // 加载线路文件
         function loadLineFile(filename) {
             fetch(`line/${filename}`)
                 .then(res => {
@@ -841,16 +954,12 @@
                     return res.json();
                 })
                 .then(data => {
-                    // 支持两种格式：直接线路对象，或包含线路对象的数组（取第一个）
                     let lineData = data;
-                    if (Array.isArray(data) && data.length > 0) {
-                        lineData = data[0];
-                    }
+                    if (Array.isArray(data) && data.length > 0) lineData = data[0];
                     if (!lineData.lineNo && !lineData.startChinese) {
-                        alert('文件格式错误，请检查线路文件');
+                        alert('文件格式错误');
                         return;
                     }
-                    // 填充到编辑器
                     if (lineData.lineNo) lineNoInput.value = lineData.lineNo;
                     if (lineData.mainStation) {
                         mainStation = { ...lineData.mainStation };
@@ -882,25 +991,17 @@
                     }
                     renderStationsList();
                     updateDisplay();
-                    // 自动切换到线路信息选项卡
                     tabLineBtn.click();
                 })
-                .catch(err => {
-                    alert(`加载失败：${err.message}`);
-                });
+                .catch(err => alert(`加载失败：${err.message}`));
         }
 
-        // 监听下拉框变化
         lineSelect.addEventListener('change', (e) => {
             const filename = e.target.value;
-            if (filename) {
-                loadLineFile(filename);
-                // 清空选中状态（可选）
-                // lineSelect.selectedIndex = 0;
-            }
+            if (filename) loadLineFile(filename);
         });
 
-        // 站点列表渲染（PC端）
+        // 站点列表渲染
         function renderStationsList() {
             const container = stationsContainer;
             container.innerHTML = '';
@@ -1133,13 +1234,16 @@
             });
         }
 
-        function getTextWidth(text, fontSize, fontFamily) {
+        function getTextWidth(text, fontSize, fontFamily, letterSpacing = 0) {
             const canvas = document.createElement('canvas');
             const ctx = canvas.getContext('2d');
             ctx.font = `${fontSize}px ${fontFamily}`;
-            return ctx.measureText(text).width;
+            const rawWidth = ctx.measureText(text).width;
+            if (letterSpacing === 0 || text.length <= 1) return rawWidth;
+            return rawWidth + letterSpacing * (text.length - 1);
         }
 
+        // 更新文字层
         function updateTextLayer() {
             const svg = document.getElementById('text-svg');
             svg.innerHTML = '';
@@ -1152,6 +1256,8 @@
             const enFont = '"Source Han Sans Bold", "思源黑体 Bold", "Noto Sans CJK SC Bold", "Microsoft YaHei", sans-serif';
             const lineFont = '"Arial Black", "Arial Black", sans-serif';
             const chSize = 53, enSize = 22, lineSize = 90;
+
+            // 中文布局（固定参数，不受手动模式影响）
             const startW = getTextWidth(startCh, chSize, chFont);
             const endW = getTextWidth(endCh, chSize, chFont);
             const dashW = getTextWidth('—', chSize, chFont);
@@ -1161,74 +1267,143 @@
             const dashX = x0 + startW + gap;
             const endX = dashX + dashW + gap;
             const yEn = 121;
-            const preservedStart = startEn.replace(/ /g, '\u00A0');
-            const preservedEnd = endEn.replace(/ /g, '\u00A0');
+
+            // 绘制中文
             if (startCh) {
                 const t = document.createElementNS('http://www.w3.org/2000/svg', 'text');
                 t.setAttribute('x', x0); t.setAttribute('y', yCh); t.setAttribute('dominant-baseline', 'middle');
-                t.setAttribute('font-size', chSize+'px'); t.setAttribute('fill', 'white');
+                t.setAttribute('font-size', chSize + 'px'); t.setAttribute('fill', 'white');
                 t.setAttribute('font-family', chFont); t.setAttribute('font-weight', 'bold');
                 t.textContent = startCh; svg.appendChild(t);
             }
             const dash = document.createElementNS('http://www.w3.org/2000/svg', 'text');
             dash.setAttribute('x', dashX); dash.setAttribute('y', yCh); dash.setAttribute('dominant-baseline', 'middle');
-            dash.setAttribute('font-size', chSize+'px'); dash.setAttribute('fill', 'white');
+            dash.setAttribute('font-size', chSize + 'px'); dash.setAttribute('fill', 'white');
             dash.setAttribute('font-family', chFont); dash.setAttribute('font-weight', 'bold');
             dash.textContent = '—'; svg.appendChild(dash);
             if (endCh) {
                 const t = document.createElementNS('http://www.w3.org/2000/svg', 'text');
                 t.setAttribute('x', endX); t.setAttribute('y', yCh); t.setAttribute('dominant-baseline', 'middle');
-                t.setAttribute('font-size', chSize+'px'); t.setAttribute('fill', 'white');
+                t.setAttribute('font-size', chSize + 'px'); t.setAttribute('fill', 'white');
                 t.setAttribute('font-family', chFont); t.setAttribute('font-weight', 'bold');
                 t.textContent = endCh; svg.appendChild(t);
             }
-            if (startEn && endEn) {
-                const startT = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-                startT.setAttribute('x', x0); startT.setAttribute('y', yEn); startT.setAttribute('dominant-baseline', 'hanging');
-                startT.setAttribute('font-size', enSize+'px'); startT.setAttribute('fill', 'white');
-                startT.setAttribute('font-family', enFont); startT.setAttribute('font-weight', 'bold');
-                startT.setAttribute('textLength', startW); startT.setAttribute('lengthAdjust', 'spacing');
-                startT.setAttribute('xml:space', 'preserve');
-                startT.textContent = preservedStart; svg.appendChild(startT);
-                const dashEnW = getTextWidth('—', enSize, enFont);
-                const dashEnX = (x0 + startW + endX) / 2 - dashEnW / 2;
-                const dashEn = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-                dashEn.setAttribute('x', dashEnX); dashEn.setAttribute('y', yEn); dashEn.setAttribute('dominant-baseline', 'hanging');
-                dashEn.setAttribute('font-size', enSize+'px'); dashEn.setAttribute('fill', 'white');
-                dashEn.setAttribute('font-family', chFont); dashEn.setAttribute('font-weight', 'bold');
-                dashEn.textContent = '—'; svg.appendChild(dashEn);
-                const endT = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-                endT.setAttribute('x', endX + endW); endT.setAttribute('y', yEn); endT.setAttribute('text-anchor', 'end');
-                endT.setAttribute('dominant-baseline', 'hanging'); endT.setAttribute('font-size', enSize+'px');
-                endT.setAttribute('fill', 'white'); endT.setAttribute('font-family', enFont); endT.setAttribute('font-weight', 'bold');
-                endT.setAttribute('textLength', endW); endT.setAttribute('lengthAdjust', 'spacing');
-                endT.setAttribute('xml:space', 'preserve');
-                endT.textContent = preservedEnd; svg.appendChild(endT);
-            } else if (startEn) {
-                const startT = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-                startT.setAttribute('x', x0); startT.setAttribute('y', yEn); startT.setAttribute('dominant-baseline', 'hanging');
-                startT.setAttribute('font-size', enSize+'px'); startT.setAttribute('fill', 'white');
-                startT.setAttribute('font-family', enFont); startT.setAttribute('font-weight', 'bold');
-                startT.setAttribute('textLength', startW); startT.setAttribute('lengthAdjust', 'spacing');
-                startT.setAttribute('xml:space', 'preserve');
-                startT.textContent = preservedStart; svg.appendChild(startT);
-            } else if (endEn) {
-                const endT = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-                endT.setAttribute('x', endX + endW); endT.setAttribute('y', yEn); endT.setAttribute('text-anchor', 'end');
-                endT.setAttribute('dominant-baseline', 'hanging'); endT.setAttribute('font-size', enSize+'px');
-                endT.setAttribute('fill', 'white'); endT.setAttribute('font-family', enFont); endT.setAttribute('font-weight', 'bold');
-                endT.setAttribute('textLength', endW); endT.setAttribute('lengthAdjust', 'spacing');
-                endT.setAttribute('xml:space', 'preserve');
-                endT.textContent = preservedEnd; svg.appendChild(endT);
+
+            const leftCn = x0;
+            const rightEndCn = endX + endW;
+            const dashEnW = getTextWidth('—', enSize, chFont);
+
+            // 根据模式确定英文破折号位置和字母间距
+            let dashEnX, startLS, endLS;
+            if (adjustMode === 'manual') {
+                // 手动模式：使用用户设定
+                dashEnX = dashX + manualEnDashOffset;
+                startLS = manualStartLS;
+                endLS = manualEndLS;
+                // 手动模式下不自动调整字母间距，直接使用用户值
+            } else {
+                // 自动模式：英文破折号与中文对齐，动态调整 letter-spacing 避免覆盖
+                dashEnX = dashX;
+                // 动态计算 letter-spacing
+                for (let g = 0; ; g++) {
+                    const targetStartRight = dashEnX - g;
+                    const targetEndLeft = dashEnX + dashEnW + g;
+
+                    let lsStart = 0;
+                    if (startEn) {
+                        const startBase = getTextWidth(startEn, enSize, enFont);
+                        const targetWidth = targetStartRight - leftCn;
+                        const charCount = startEn.length;
+                        if (charCount > 1 && targetWidth > 0) {
+                            lsStart = (targetWidth - startBase) / (charCount - 1);
+                        }
+                    }
+                    let lsEnd = 0;
+                    if (endEn) {
+                        const endBase = getTextWidth(endEn, enSize, enFont);
+                        const targetWidth = rightEndCn - targetEndLeft;
+                        const charCount = endEn.length;
+                        if (charCount > 1 && targetWidth > 0) {
+                            lsEnd = (targetWidth - endBase) / (charCount - 1);
+                        }
+                    }
+                    let actualStart = 0, actualEnd = 0;
+                    if (startEn) actualStart = getTextWidth(startEn, enSize, enFont, lsStart);
+                    if (endEn) actualEnd = getTextWidth(endEn, enSize, enFont, lsEnd);
+
+                    let overlap = false;
+                    if (startEn && leftCn + actualStart > dashEnX - g) overlap = true;
+                    if (endEn && rightEndCn - actualEnd < dashEnX + dashEnW + g) overlap = true;
+
+                    if (!overlap) {
+                        startLS = lsStart;
+                        endLS = lsEnd;
+                        break;
+                    }
+                    if (g > 1000) break;
+                }
             }
+
+            // 绘制主站英文
+            if (startEn) {
+                const startEnX = leftCn;
+                const startEnText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                startEnText.setAttribute('x', startEnX);
+                startEnText.setAttribute('y', yEn);
+                startEnText.setAttribute('dominant-baseline', 'hanging');
+                startEnText.setAttribute('font-size', enSize + 'px');
+                startEnText.setAttribute('fill', 'white');
+                startEnText.setAttribute('font-family', enFont);
+                startEnText.setAttribute('font-weight', 'bold');
+                startEnText.setAttribute('text-anchor', 'start');
+                if (Math.abs(startLS) > 0.01) {
+                    startEnText.setAttribute('letter-spacing', startLS + 'px');
+                }
+                startEnText.textContent = startEn;
+                svg.appendChild(startEnText);
+            }
+
+            // 绘制副站英文
+            if (endEn) {
+                const endEnX = rightEndCn;
+                const endEnText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                endEnText.setAttribute('x', endEnX);
+                endEnText.setAttribute('y', yEn);
+                endEnText.setAttribute('dominant-baseline', 'hanging');
+                endEnText.setAttribute('font-size', enSize + 'px');
+                endEnText.setAttribute('fill', 'white');
+                endEnText.setAttribute('font-family', enFont);
+                endEnText.setAttribute('font-weight', 'bold');
+                endEnText.setAttribute('text-anchor', 'end');
+                if (Math.abs(endLS) > 0.01) {
+                    endEnText.setAttribute('letter-spacing', endLS + 'px');
+                }
+                endEnText.textContent = endEn;
+                svg.appendChild(endEnText);
+            }
+
+            // 绘制英文破折号（仅在两侧英文都存在时绘制）
+            if (startEn && endEn) {
+                const dashEn = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                dashEn.setAttribute('x', dashEnX);
+                dashEn.setAttribute('y', yEn);
+                dashEn.setAttribute('dominant-baseline', 'hanging');
+                dashEn.setAttribute('font-size', enSize + 'px');
+                dashEn.setAttribute('fill', 'white');
+                dashEn.setAttribute('font-family', chFont);
+                dashEn.setAttribute('font-weight', 'bold');
+                dashEn.textContent = '—';
+                svg.appendChild(dashEn);
+            }
+
+            // 线路号
             const lineGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
             lineGroup.setAttribute('transform', `translate(768.75,111.09) scale(0.93,1)`);
             const lineText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
             lineText.setAttribute('x', '0'); lineText.setAttribute('y', '0'); lineText.setAttribute('text-anchor', 'middle');
-            lineText.setAttribute('dominant-baseline', 'middle'); lineText.setAttribute('font-size', lineSize+'px');
+            lineText.setAttribute('dominant-baseline', 'middle'); lineText.setAttribute('font-size', lineSize + 'px');
             lineText.setAttribute('font-weight', 'bold'); lineText.setAttribute('fill', 'white');
             lineText.setAttribute('font-family', lineFont); lineText.setAttribute('letter-spacing', '0.02em');
-            lineText.setAttribute('line-height', '40pt');
             lineText.textContent = lineNo;
             lineGroup.appendChild(lineText);
             svg.appendChild(lineGroup);
@@ -1242,6 +1417,30 @@
         endChineseInput.addEventListener('input', updateDisplay);
         endEnglishInput.addEventListener('input', updateDisplay);
         lineNoInput.addEventListener('input', updateDisplay);
+
+        // ---------- 导出 PNG ----------
+        exportBtn.addEventListener('click', async () => {
+            const node = document.getElementById('map-container');
+            if (!node) return;
+            try {
+                // 显示加载提示
+                const originalText = exportBtn.textContent;
+                exportBtn.textContent = '导出中...';
+                exportBtn.disabled = true;
+                const dataUrl = await htmlToImage.toPng(node, { quality: 1, pixelRatio: 2 });
+                const link = document.createElement('a');
+                link.download = '线路图.png';
+                link.href = dataUrl;
+                link.click();
+                exportBtn.textContent = originalText;
+                exportBtn.disabled = false;
+            } catch (error) {
+                console.error('导出失败', error);
+                alert('导出失败，请重试');
+                exportBtn.textContent = '导出PNG';
+                exportBtn.disabled = false;
+            }
+        });
 
         // ---------- 控制盘宽度拖拽 ----------
         let isResizing = false;
@@ -1273,7 +1472,6 @@
         resizeHandle.addEventListener('mousedown', startResize);
         resizeHandle.addEventListener('mousedown', (e) => e.stopPropagation());
 
-        // 手机端控制盘显示逻辑
         function adjustMobileUI() {
             const isMobile = window.innerWidth <= 768;
             const toggleBtn = document.getElementById('toggleBtn');
@@ -1320,8 +1518,16 @@
                 }
             }
             adjustMobileUI();
-            // 预加载线路列表（异步）
             loadLineList();
+            // 初始化手动参数与UI同步
+            manualStartChFontSizeInput.value = manualStartChFontSize;
+            manualEndChFontSizeInput.value = manualEndChFontSize;
+            manualChLetterSpacingInput.value = manualChLetterSpacing;
+            manualStartLSInput.value = manualStartLS;
+            manualEndLSInput.value = manualEndLS;
+            manualEnFontSizeInput.value = manualEnFontSize;
+            manualEnDashOffsetInput.value = manualEnDashOffset;
+            updateManualControlsVisibility();
         });
         window.addEventListener('resize', adjustMobileUI);
 
